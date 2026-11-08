@@ -1,0 +1,23 @@
+name: Compilar DMG do CNX Installer (macOS)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: macos-15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compilar .app universal e gerar .dmg
+        run: bash ./build-dmg.sh
+      - name: Enviar DMG e hash como artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: CNX-Installer-macOS-v0.2
+          path: |
+            dist/*.dmg
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 14
